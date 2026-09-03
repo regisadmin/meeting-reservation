@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบจองห้องประชุม - ศูนย์จดทะเบียนธุรกิจ ชั้น 4</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Prompt & Sarabun -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Prompt', 'Sarabun', 'sans-serif'],
+          },
+          colors: {
+            gov: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              500: '#0284c7',
+              600: '#0369a1',
+              700: '#075985',
+              800: '#0c4a6e',
+              900: '#082f49',
+            }
+          },
+          boxShadow: {
+            'glow-sky': '0 0 25px -5px rgba(2, 132, 199, 0.25)',
+            'card-soft': '0 10px 30px -5px rgba(15, 23, 42, 0.06)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Prompt', sans-serif;
+      background-color: #f8fafc;
+    }
+    .sarabun {
+      font-family: 'Sarabun', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col bg-slate-50/80">
+
+  <!-- TOP HEADER -->
+  <header class="bg-gradient-to-r from-gov-900 via-gov-800 to-slate-900 text-white shadow-xl sticky top-0 z-40 border-b border-white/10 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <!-- Logo & Office Title -->
+        <div class="flex items-center space-x-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center backdrop-blur-md shadow-inner text-sky-300">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-400/30">ศูนย์จดทะเบียนธุรกิจ ชั้น 4</span>
+              <span class="text-xs text-slate-300 font-light hidden sm:inline">เวลาราชการ 08:30 - 16:30 น.</span>
+            </div>
+            <h1 class="text-base sm:text-xl font-bold tracking-tight text-white mt-0.5">ระบบจองห้องประชุมออนไลน์</h1>
+          </div>
+        </div>
+
+        <!-- 24-Hour Live Clock & Action Button -->
+        <div class="flex items-center space-x-4 text-sm">
+          <div class="text-right">
+            <div id="liveClock" class="font-mono text-sky-200 text-base sm:text-lg font-bold">08:30:00</div>
+            <div id="liveDate" class="text-[11px] sm:text-xs text-slate-300 font-light hidden sm:block">วันพุธที่ 2 กันยายน 2569</div>
+          </div>
+          <div class="h-8 w-px bg-white/20 hidden sm:block"></div>
+          <a href="#booking-form-section" class="hidden md:inline-flex items-center px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-xs font-bold text-white shadow-md hover:shadow-lg transition-all">
+            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            <span>ไปยัง Google Form</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN WRAPPER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-grow w-full space-y-8">
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 1 (TOP): ตารางการใช้ห้องประชุม (GOOGLE CALENDAR LIVE EMBED)          -->
+    <!-- ========================================================================= -->
+    <section class="bg-white rounded-3xl p-5 sm:p-7 border border-slate-200/80 shadow-card-soft space-y-5">
+      
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-sky-700 bg-sky-50 px-2.5 py-1 rounded-lg border border-sky-100">ขั้นตอนที่ 1</span>
+            <span class="text-xs text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full font-semibold border border-emerald-200 flex items-center">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span>
+              Google Calendar ปฏิทินแบบเรียลไทม์
+            </span>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-bold text-slate-800 mt-1.5">ตารางการใช้ห้องประชุม (ศูนย์จดทะเบียนธุรกิจ ชั้น 4)</h2>
+          <p class="text-xs text-slate-500 sarabun mt-0.5">กรุณาตรวจสอบช่วงเวลาว่างในปฏิทินก่อนกรอกแบบฟอร์ม เพื่อความสะดวกในการจองห้องประชุม</p>
+        </div>
+
+        <!-- Room Selector Tabs for Calendar -->
+        <div class="flex items-center p-1.5 bg-slate-100 rounded-2xl border border-slate-200 text-xs sm:text-sm">
+          <button type="button" onclick="selectCalendarRoom('small')" id="cal-btn-small" class="px-5 py-2.5 rounded-xl font-bold transition-all duration-200 flex items-center space-x-2 bg-white text-sky-700 shadow-md border border-slate-200/60">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+            <span>ห้องเล็ก (ชั้น 4)</span>
+          </button>
+          <button type="button" onclick="selectCalendarRoom('large')" id="cal-btn-large" class="px-5 py-2.5 rounded-xl font-semibold transition-all duration-200 flex items-center space-x-2 text-slate-600 hover:text-slate-900">
+            <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
+            <span>ห้องใหญ่ (ชั้น 4)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Calendar Embedded Viewports -->
+      <div class="rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 shadow-inner">
+        
+        <!-- Frame 1: ห้องเล็ก -->
+        <div id="cal-box-small" class="block">
+          <div class="bg-slate-100/90 px-4 py-2.5 text-xs text-slate-600 font-medium flex items-center justify-between border-b border-slate-200">
+            <span class="flex items-center font-bold text-emerald-800">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 mr-2"></span>
+              ปฏิทิน: ห้องประชุมศูนย์จดทะเบียนธุรกิจ ชั้น 4 (ห้องเล็ก)
+            </span>
+            <a href="https://calendar.google.com/calendar/embed?src=4936cfd119b48c51dd5cab72eb81a22d2068d9b70789f64d864f306828ecfab1%40group.calendar.google.com&ctz=Asia%2FBangkok" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:text-sky-800 font-semibold flex items-center">
+              <span>เปิดใน Google Calendar เต็มจอ</span>
+              <svg class="w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+          </div>
+          <div class="relative w-full" style="height: 560px;">
+            <iframe 
+              id="iframe-small"
+              src="https://calendar.google.com/calendar/embed?src=4936cfd119b48c51dd5cab72eb81a22d2068d9b70789f64d864f306828ecfab1%40group.calendar.google.com&ctz=Asia%2FBangkok" 
+              style="border: 0" 
+              class="w-full h-full"
+              frameborder="0" 
+              scrolling="no">
+            </iframe>
+          </div>
+        </div>
+
+        <!-- Frame 2: ห้องใหญ่ -->
+        <div id="cal-box-large" class="hidden">
+          <div class="bg-slate-100/90 px-4 py-2.5 text-xs text-slate-600 font-medium flex items-center justify-between border-b border-slate-200">
+            <span class="flex items-center font-bold text-indigo-800">
+              <span class="w-2 h-2 rounded-full bg-indigo-500 mr-2"></span>
+              ปฏิทิน: ห้องประชุมศูนย์จดทะเบียนธุรกิจ ชั้น 4 (ห้องใหญ่)
+            </span>
+            <a href="https://calendar.google.com/calendar/embed?src=3950e369a9546f6f2cd74313b31ab7423b6410821e03f868b4c70604a50622b4%40group.calendar.google.com&ctz=Asia%2FBangkok" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:text-sky-800 font-semibold flex items-center">
+              <span>เปิดใน Google Calendar เต็มจอ</span>
+              <svg class="w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+          </div>
+          <div class="relative w-full" style="height: 560px;">
+            <iframe 
+              id="iframe-large"
+              src="https://calendar.google.com/calendar/embed?src=3950e369a9546f6f2cd74313b31ab7423b6410821e03f868b4c70604a50622b4%40group.calendar.google.com&ctz=Asia%2FBangkok" 
+              style="border: 0" 
+              class="w-full h-full"
+              frameborder="0" 
+              scrolling="no">
+            </iframe>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500 bg-slate-50 px-4 py-2.5 rounded-2xl border border-slate-200/70 sarabun">
+        <span class="flex items-center">
+          <svg class="w-4 h-4 text-emerald-600 mr-1.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+          ตรวจสอบช่วงเวลาในปฏิทินแล้ว สามารถเลื่อนลงไปกรอก Google Form ด้านล่างได้ทันที
+        </span>
+        <a href="#booking-form-section" class="text-sky-700 font-bold hover:underline">ไปยังฟอร์มกรอกข้อมูล Google Form ↓</a>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 2 (MIDDLE): ฝัง GOOGLE FORM ให้กรอกบนหน้านี้โดยตรง                    -->
+    <!-- ========================================================================= -->
+    <section id="booking-form-section" class="bg-white rounded-3xl p-5 sm:p-8 border border-slate-200/80 shadow-md relative space-y-6">
+      
+      <!-- Section Header -->
+      <div class="pb-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-sky-700 bg-sky-50 px-2.5 py-1 rounded-lg border border-sky-100">ขั้นตอนที่ 2</span>
+            <span class="text-xs text-slate-500 sarabun">กรอกข้อมูลการจองห้องประชุมผ่าน Google Form</span>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-bold text-slate-800 mt-1">แบบฟอร์มการขอใช้ห้องประชุม</h2>
+          <p class="text-xs text-slate-500 sarabun mt-0.5">กรอกข้อมูลลงในแบบฟอร์มด้านล่างนี้ได้โดยตรง ข้อมูลจะถูกบันทึกเข้า Google Form ของศูนย์จดทะเบียนธุรกิจทันที</p>
+        </div>
+
+        <!-- Controls: Refresh Form & Open in new tab -->
+        <div class="flex items-center space-x-2">
+          <button 
+            type="button" 
+            onclick="reloadGoogleForm()" 
+            title="โหลดแบบฟอร์มใหม่" 
+            class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold border border-slate-200 flex items-center space-x-1.5 transition-colors shadow-2xs">
+            <svg id="reloadFormIcon" class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <span>รีเฟรชฟอร์ม</span>
+          </button>
+          <a 
+            href="https://docs.google.com/forms/d/e/1FAIpQLSeszdrnZubklKTIen7PoIJQEc28H_7Dzs7YkZBCH6_F17Qysw/viewform?usp=sharing" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-xs font-semibold shadow-sm flex items-center space-x-1.5 transition-colors">
+            <span>เปิดฟอร์มในแท็บใหม่</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Guidance Banner -->
+      <div class="bg-amber-50/90 border border-amber-200/90 rounded-2xl p-4 text-xs text-amber-900 sarabun flex items-start space-x-3">
+        <svg class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <div class="space-y-0.5">
+          <p class="font-bold text-amber-950">คำแนะนำการกรอกข้อมูล:</p>
+          <p>• อนุญาตให้จองได้เฉพาะวันและเวลาราชการ ระหว่างเวลา <strong>08:30 - 16:30 น.</strong></p>
+          <p>• สามารถเลือกเวลาได้อิสระ และกรอกรายละเอียดให้ครบถ้วนในแบบฟอร์มด้านล่าง</p>
+        </div>
+      </div>
+
+      <!-- Embedded Google Form Iframe Container -->
+      <div class="w-full rounded-2xl overflow-hidden border border-slate-200/90 bg-white shadow-inner relative" style="min-height: 980px;">
+        <iframe 
+          id="embeddedGoogleForm"
+          src="https://docs.google.com/forms/d/e/1FAIpQLSeszdrnZubklKTIen7PoIJQEc28H_7Dzs7YkZBCH6_F17Qysw/viewform?embedded=true" 
+          width="100%" 
+          height="1150" 
+          frameborder="0" 
+          marginheight="0" 
+          marginwidth="0"
+          class="w-full"
+          title="Google Form จองห้องประชุม">
+          กำลังโหลดแบบฟอร์ม...
+        </iframe>
+      </div>
+
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- SECTION 3 (BOTTOM): ข้อปฏิบัติและข้อมูลติดต่อ (REGULATIONS & INFO)            -->
+    <!-- ========================================================================= -->
+    <section class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-card-soft space-y-4">
+      <h3 class="text-base font-bold text-slate-800 flex items-center">
+        <svg class="w-5 h-5 text-sky-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        ข้อปฏิบัติการใช้งานห้องประชุม ศูนย์จดทะเบียนธุรกิจ ชั้น 4
+      </h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-600 sarabun">
+        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
+          <strong class="text-slate-800 font-semibold block">1. กำหนดการใช้งาน</strong>
+          <p>สามารถเลือกจองช่วงเวลาได้อิสระ ในช่วงเวลา 08:30 - 16:30 น. (วันจันทร์ - ศุกร์ เว้นวันหยุดราชการ)</p>
+        </div>
+
+        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
+          <strong class="text-slate-800 font-semibold block">2. การตรวจสอบคิวว่าง</strong>
+          <p>ตรวจสอบตาราง Google Calendar ด้านบนก่อนทำการจอง เพื่อความสะดวกในการใช้งานห้องประชุม</p>
+        </div>
+
+        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
+          <strong class="text-slate-800 font-semibold block">3. การยกเลิก / เปลี่ยนแปลง</strong>
+          <p>หากต้องการยกเลิกหรือเปลี่ยนแปลงเวลา กรุณาติดต่อผู้ดูแลระบบศูนย์จดทะเบียนธุรกิจ ชั้น 4</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-slate-200 py-6 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500 sarabun space-y-1">
+      <p class="font-medium text-slate-700">ศูนย์จดทะเบียนธุรกิจ ชั้น 4 • ระบบบริหารจัดการห้องประชุมราชการ</p>
+      <p>ระบบกำหนดให้จองได้เฉพาะวันและเวลาราชการ ระหว่างเวลา 08:30 - 16:30 น.</p>
+    </div>
+  </footer>
+
+  <!-- ============================================== -->
+  <!-- JAVASCRIPT LOGIC -->
+  <!-- ============================================== -->
+  <script>
+    // Switch Calendar Room View
+    function selectCalendarRoom(roomKey) {
+      const btnSmall = document.getElementById('cal-btn-small');
+      const btnLarge = document.getElementById('cal-btn-large');
+      const calBoxSmall = document.getElementById('cal-box-small');
+      const calBoxLarge = document.getElementById('cal-box-large');
+
+      if (roomKey === 'small') {
+        btnSmall.className = "px-5 py-2.5 rounded-xl font-bold transition-all duration-200 flex items-center space-x-2 bg-white text-sky-700 shadow-md border border-slate-200/60";
+        btnLarge.className = "px-5 py-2.5 rounded-xl font-semibold transition-all duration-200 flex items-center space-x-2 text-slate-600 hover:text-slate-900";
+
+        calBoxSmall.classList.remove('hidden');
+        calBoxLarge.classList.add('hidden');
+      } else {
+        btnLarge.className = "px-5 py-2.5 rounded-xl font-bold transition-all duration-200 flex items-center space-x-2 bg-white text-indigo-700 shadow-md border border-slate-200/60";
+        btnSmall.className = "px-5 py-2.5 rounded-xl font-semibold transition-all duration-200 flex items-center space-x-2 text-slate-600 hover:text-slate-900";
+
+        calBoxLarge.classList.remove('hidden');
+        calBoxSmall.classList.add('hidden');
+      }
+    }
+
+    // Reload Embedded Google Form
+    function reloadGoogleForm() {
+      const iframe = document.getElementById('embeddedGoogleForm');
+      const icon = document.getElementById('reloadFormIcon');
+      if (icon) icon.classList.add('animate-spin');
+
+      if (iframe) {
+        iframe.src = "https://docs.google.com/forms/d/e/1FAIpQLSeszdrnZubklKTIen7PoIJQEc28H_7Dzs7YkZBCH6_F17Qysw/viewform?embedded=true";
+      }
+
+      setTimeout(() => {
+        if (icon) icon.classList.remove('animate-spin');
+      }, 1000);
+    }
+
+    // 24-Hour Live Clock Updater (Thai Format)
+    function initClock() {
+      function update() {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('th-TH', { hour12: false });
+        const dayNames = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
+        const monthNames = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+        
+        const dateStr = `${dayNames[now.getDay()]}ที่ ${now.getDate()} ${monthNames[now.getMonth()]} ${now.getFullYear() + 543}`;
+
+        const clockEl = document.getElementById('liveClock');
+        const dateEl = document.getElementById('liveDate');
+        if (clockEl) clockEl.innerText = timeStr;
+        if (dateEl) dateEl.innerText = dateStr;
+      }
+      update();
+      setInterval(update, 1000);
+    }
+
+    // Window Load Initialization
+    window.onload = function() {
+      initClock();
+      selectCalendarRoom('small');
+    };
+  </script>
+</body>
+</html>
