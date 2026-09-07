@@ -4,10 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ระบบจองห้องประชุมออนไลน์</title>
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Prompt -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     body {
@@ -17,7 +20,8 @@
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
 
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+  <!-- แถบเมนูด้านบน (Header) -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div class="bg-indigo-600 text-white p-2.5 rounded-xl shadow flex items-center justify-center">
@@ -36,8 +40,10 @@
     </div>
   </header>
 
+  <!-- เนื้อหาหลัก -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1 w-full space-y-6">
 
+    <!-- ส่วนที่ 1: รูปภาพแผนผังรวมห้องประชุมภาพใหญ่เพียงภาพเดียว -->
     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
       <div class="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/50">
         <div class="flex items-center gap-2.5">
@@ -49,98 +55,332 @@
           </div>
         </div>
 
+        <!-- ปุ่มสำหรับอัปโหลด/เปลี่ยนรูปแผนผัง -->
         <div class="flex items-center gap-2">
-          <label class="cursor-pointer inline-flex items-center gap-1.5 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 text-xs font-medium px-3 py-1.5 rounded-lg shadow-sm transition">
+          <label class="cursor-pointer inline-flex items-center gap-1.5 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 text-xs font-medium px-3 py-1.5 rounded-lg shadow-2xs transition">
             <i data-lucide="upload" class="w-3.5 h-3.5"></i>
             เปลี่ยนรูปแผนผัง
             <input type="file" accept="image/*" class="hidden" onchange="handleFloorPlanUpload(event)">
           </label>
-          <button onclick="promptFloorPlanUrl()" class="inline-flex items-center gap-1.5 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 text-xs font-medium px-3 py-1.5 rounded-lg shadow-sm transition">
+          <button onclick="promptFloorPlanUrl()" class="inline-flex items-center gap-1.5 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 text-xs font-medium px-3 py-1.5 rounded-lg shadow-2xs transition">
             <i data-lucide="link" class="w-3.5 h-3.5"></i>
             ใส่ URL รูป
           </button>
         </div>
       </div>
 
+      <!-- กรอบแสดงภาพแผนผังขนาดใหญ่ -->
       <div class="p-4 bg-slate-100/50 flex items-center justify-center">
         <div class="w-full rounded-xl overflow-hidden border border-slate-200 bg-white flex items-center justify-center min-h-[260px] max-h-[460px]">
-          <img id="floorPlanImage" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='716' height='400' viewBox='0 0 716 400' fill='none'><rect width='716' height='400' fill='%23F8FAFC'/><rect x='50' y='50' width='616' height='300' rx='12' fill='%23EEF2FF' stroke='%236366F1' stroke-width='2' stroke-dasharray='6 6'/><text x='358' y='190' font-family='sans-serif' font-size='20' fill='%234338CA' text-anchor='middle' font-weight='bold'>แผนผังห้องประชุม (ตัวอย่าง)</text><text x='358' y='220' font-family='sans-serif' font-size='14' fill='%2364748B' text-anchor='middle'>กดปุ่มด้านบนเพื่ออัปโหลดรูปแผนผังของคุณ</text></svg>" alt="แผนผังห้องประชุม" class="w-full h-auto max-h-[440px] object-contain">
+          <!-- สามารถเปลี่ยน src="plan.jpg" หรือใส่ URL รูปภาพถาวรของคุณที่นี่ -->
+          <img id="floorPlanImage" 
+               src="plan.jpg" 
+               alt="แผนผังห้องประชุม" 
+               class="w-full h-full object-contain max-h-[440px] transition duration-200 hover:scale-[1.01]"
+               onerror="if(this.src !== 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=80') { this.src='https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=80'; }">
         </div>
       </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="roomContainer">
+    <!-- ส่วนที่ 2: เลือกห้องประชุมเพื่อดูปฏิทิน Google Calendar -->
+    <div class="space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <h2 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+            <i data-lucide="calendar" class="w-5 h-5 text-indigo-600"></i>
+            ตารางเวลาห้องประชุม (Google Calendar)
+          </h2>
+          <p class="text-xs text-slate-500">คลิกเลือกห้องประชุมที่ต้องการตรวจสอบเวลาว่าง</p>
+        </div>
+        <!-- แถบระบุสถานะ -->
+        <span class="inline-flex items-center gap-1.5 text-xs text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full font-medium w-fit">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          เชื่อมต่อปฏิทินเรียลไทม์
+        </span>
       </div>
 
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6">
-      <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-        <i data-lucide="calendar" class="w-5 h-5 text-indigo-600"></i>
-        ตารางการใช้งานห้องประชุม
-      </h3>
-      <div class="w-full h-[500px] rounded-xl overflow-hidden border border-slate-200 bg-slate-50 flex items-center justify-center">
-        <p class="text-slate-400 text-sm">ส่วนแสดงผล Google Calendar หรือระบบตารางนัดหมาย</p>
+      <!-- ปุ่มเลือกห้องประชุม 4 ห้อง -->
+      <div class="flex flex-wrap gap-2" id="roomTabButtons">
+        <!-- JS ทำการเรนเดอร์ -->
+      </div>
+
+      <!-- กรอบแสดง Iframe Google Calendar -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden p-4 sm:p-5">
+        <div class="flex items-center justify-between mb-3 pb-3 border-b border-slate-100">
+          <div>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-indigo-50 text-indigo-700" id="currentRoomTag">ชั้น 9</span>
+            <h3 class="text-base font-bold text-slate-800 mt-1" id="currentRoomHeading">ห้องประชุมกองทะเบียนธุรกิจ ชั้น 9</h3>
+          </div>
+          <button onclick="openBookingModal()" class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-1.5 rounded-lg shadow-xs transition">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            จองห้องประชุม
+          </button>
+        </div>
+
+        <div class="w-full bg-slate-50 rounded-xl overflow-hidden border border-slate-200" style="height: 620px;">
+          <iframe id="calendarIframe" src="" class="w-full h-full border-0" frameborder="0" scrolling="no">กำลังโหลดปฏิทิน...</iframe>
+        </div>
       </div>
     </div>
 
   </main>
 
-  <script>
-    // ข้อมูลห้องประชุมตัวอย่าง
-    const rooms = [
-      { id: 1, name: "ห้องประชุมใหญ่ (Grand Hall)", capacity: "50-100 คน", status: "ว่าง", color: "emerald" },
-      { id: 2, name: "ห้องประชุมกลาง (Meeting Room A)", capacity: "15-30 คน", status: "ว่าง", color: "emerald" },
-      { id: 3, name: "ห้องประชุมเล็ก (Executive Room)", capacity: "5-10 คน", status: "ใช้งานอยู่", color: "rose" }
-    ];
-
-    function renderRooms() {
-      const container = document.getElementById('roomContainer');
-      if(!container) return;
-      container.innerHTML = rooms.map(room => `
-        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between hover:border-indigo-200 transition">
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="font-bold text-slate-900">${room.name}</span>
-              <span class="text-xs px-2.5 py-1 rounded-full font-medium ${room.color === 'emerald' ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}">
-                ${room.status}
-              </span>
-            </div>
-            <p class="text-xs text-slate-500 mb-4 flex items-center gap-1">
-              <i data-lucide="users" class="w-3.5 h-3.5"></i> รองรับได้ ${room.capacity}
-            </p>
+  <!-- โมดอลกรอก Google Form -->
+  <div id="bookingModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 transition-all duration-300">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl h-[90vh] max-h-[850px] flex flex-col overflow-hidden border border-slate-200">
+      
+      <!-- Modal Header -->
+      <div class="px-5 py-3.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center">
+            <i data-lucide="file-edit" class="w-4 h-4"></i>
           </div>
-          <button onclick="openBookingModal(${room.id})" class="w-full py-2 bg-slate-100 hover:bg-indigo-600 hover:text-white text-slate-700 text-sm font-medium rounded-lg transition">
-            เลือกห้องนี้
+          <div>
+            <h3 class="font-bold text-slate-800 text-sm sm:text-base">แบบฟอร์มขอจองห้องประชุม</h3>
+            <p class="text-[11px] text-slate-500">กรอกข้อมูลให้ครบถ้วนแล้วกดส่งข้อมูลที่ด้านล่างของแบบฟอร์ม</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="closeBookingModal()" class="text-slate-400 hover:text-slate-600 hover:bg-slate-200 p-1.5 rounded-lg transition" title="ปิดหน้าต่าง">
+            <i data-lucide="x" class="w-5 h-5"></i>
           </button>
         </div>
-      `).join('');
-      lucide.createIcons();
+      </div>
+
+      <!-- แถบแจ้งเตือนวิธีใช้งาน -->
+      <div class="bg-indigo-50/80 border-b border-indigo-100 px-4 py-2 flex items-center justify-between text-xs text-indigo-900">
+        <div class="flex items-center gap-2">
+          <i data-lucide="sparkles" class="w-4 h-4 text-indigo-600 flex-shrink-0"></i>
+          <span>กรอกข้อมูลแล้วกดปุ่ม <strong>"ส่ง" (Submit)</strong> ในฟอร์มด้านล่าง ระบบจะบันทึกและแสดงสถานะให้โดยอัตโนมัติ</span>
+        </div>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLScTC-YDy6xf6PeWdDwXXHTH7c4AboI53L7VmTfxIJFL-sDZ6g/viewform?usp=header" target="_blank" rel="noopener noreferrer" class="underline font-medium text-indigo-700 hidden sm:inline">เปิดแท็บใหม่</a>
+      </div>
+
+      <!-- Iframe Google Form พร้อมตรวจจับการส่งแบบฟอร์มอัตโนมัติ -->
+      <div class="flex-1 w-full h-full bg-slate-50 relative">
+        <iframe id="googleFormIframe" src="" class="w-full h-full border-0" frameborder="0" marginheight="0" marginwidth="0">กำลังโหลดฟอร์ม...</iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- โมดอลแสดงสถานะเมื่อกดส่งฟอร์ม -->
+  <div id="statusModal" class="fixed inset-0 z-50 hidden bg-slate-900/65 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8 text-center border border-slate-100">
+      <div class="w-20 h-20 mx-auto bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-5 ring-8 ring-emerald-50">
+        <i data-lucide="mail-check" class="w-10 h-10"></i>
+      </div>
+
+      <h3 class="text-xl sm:text-2xl font-bold text-slate-900 mb-2">ส่งแบบฟอร์มเรียบร้อยแล้ว</h3>
+      
+      <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 my-4 text-left">
+        <div class="flex items-start gap-3">
+          <i data-lucide="bell" class="w-5 h-5 text-indigo-600 mt-0.5 flex-shrink-0"></i>
+          <div>
+            <p class="text-sm font-semibold text-slate-800 mb-1">โปรดตรวจสอบผลการจอง:</p>
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              กรุณา <span class="font-bold text-indigo-700">ตรวจสอบผลการจองผ่านอีเมลที่ลงทะเบียนไว้</span> โดยระบบหรือเจ้าหน้าที่จะจัดส่งการยืนยันสถานะไปยังกล่องข้อความของท่าน
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-xs text-slate-500 mb-6">
+        หากไม่พบในกล่องข้อความหลัก กรุณาตรวจสอบในโฟลเดอร์ Junk/Spam
+      </p>
+
+      <button onclick="closeStatusModal()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-xl shadow transition">
+        รับทราบและปิดหน้านี้
+      </button>
+    </div>
+  </div>
+
+  <!-- ท้ายหน้าเว็บ (Footer) -->
+  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500 mt-12">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <i data-lucide="building" class="w-4 h-4 text-slate-400"></i>
+        <span>ระบบจองห้องประชุมออนไลน์</span>
+      </div>
+      <div>
+        <span>กลุ่มงานสารสนเทศและบริการอาคาร</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- สคริปต์การทำงานของหน้าเว็บ -->
+  <script>
+    // รูปภาพเริ่มต้น (สามารถเปลี่ยนชื่อไฟล์รูป เช่น 'plan.jpg' หรือ URL ตรงนี้ได้ถาวร)
+    const DEFAULT_FLOOR_PLAN_URL = "plan.jpg";
+
+    // ข้อมูลห้องประชุมทั้ง 4 ห้อง
+    const rooms = [
+      {
+        id: 0,
+        name: "ห้องประชุมกองทะเบียนธุรกิจ ชั้น 9",
+        tag: "ชั้น 9",
+        calendarSrc: "https://calendar.google.com/calendar/embed?src=875289e792dd6ec86c9c7f1d9ff2ecb9dd7e2048e152d6b455571d9d9d656bfb%40group.calendar.google.com&ctz=Asia%2FBangkok"
+      },
+      {
+        id: 1,
+        name: "ห้องประชุม ชั้น 4 (ห้องที่ 1)",
+        tag: "ชั้น 4 (ห้อง 1)",
+        calendarSrc: "https://calendar.google.com/calendar/embed?src=0d1d24bccaf0274efc0b16683921fbd979e18cbb1d78f1c8548d0e311ed51d64%40group.calendar.google.com&ctz=Asia%2FBangkok"
+      },
+      {
+        id: 2,
+        name: "ห้องประชุม ชั้น 4 (ห้องที่ 2)",
+        tag: "ชั้น 4 (ห้อง 2)",
+        calendarSrc: "https://calendar.google.com/calendar/embed?src=ee7337dabebef142ccbcc1dfe5cd43aeab03e3752eeeac8c497ab23c678cc65b%40group.calendar.google.com&ctz=Asia%2FBangkok"
+      },
+      {
+        id: 3,
+        name: "ห้องประชุม ชั้น 4 (ห้องที่ 3)",
+        tag: "ชั้น 4 (ห้อง 3)",
+        calendarSrc: "https://calendar.google.com/calendar/embed?src=0b6889560ef39ad2989ad3f221eafc787066d0b37910f2797bc4471fcbaf1f5b%40group.calendar.google.com&ctz=Asia%2FBangkok"
+      }
+    ];
+
+    const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScTC-YDy6xf6PeWdDwXXHTH7c4AboI53L7VmTfxIJFL-sDZ6g/viewform?usp=header";
+    let activeRoomIndex = 0;
+    let formLoadCount = 0;
+    let isModalOpening = false;
+
+    // เรนเดอร์ปุ่มเลือกห้องแบบเรียบง่าย 4 ปุ่ม
+    function renderRoomTabs() {
+      const container = document.getElementById('roomTabButtons');
+      container.innerHTML = '';
+
+      rooms.forEach((room, index) => {
+        const isActive = index === activeRoomIndex;
+        const btn = document.createElement('button');
+        btn.onclick = () => selectRoom(index);
+        btn.className = `px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium transition border flex items-center gap-2 ${
+          isActive 
+            ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs' 
+            : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
+        }`;
+
+        btn.innerHTML = `
+          <i data-lucide="door-open" class="w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}"></i>
+          <span>${room.name}</span>
+        `;
+
+        container.appendChild(btn);
+      });
+
+      if (window.lucide) {
+        lucide.createIcons();
+      }
     }
 
-    function openBookingModal(roomId) {
-      alert('เปิดฟอร์มจองห้องประชุม ' + (roomId ? 'หมายเลข ' + roomId : ''));
+    // เลือกห้องเพื่อเปลี่ยนปฏิทิน
+    function selectRoom(index) {
+      activeRoomIndex = index;
+      const room = rooms[index];
+
+      document.getElementById('currentRoomTag').textContent = room.tag;
+      document.getElementById('currentRoomHeading').textContent = room.name;
+      document.getElementById('calendarIframe').src = room.calendarSrc;
+
+      renderRoomTabs();
     }
 
+    // อัปโหลดรูปภาพแผนผังห้องประชุมจากเครื่อง
     function handleFloorPlanUpload(event) {
       const file = event.target.files[0];
       if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
-          document.getElementById('floorPlanImage').src = e.target.result;
+          const newUrl = e.target.result;
+          document.getElementById('floorPlanImage').src = newUrl;
+          
+          // บันทึกลง Cloud หากมีระบบเชื่อมต่อ
+          if (typeof saveFloorPlanToCloud === 'function') {
+            saveFloorPlanToCloud(newUrl);
+          }
         };
         reader.readAsDataURL(file);
       }
     }
 
+    // ใส่ URL แผนผังห้องประชุม
     function promptFloorPlanUrl() {
-      const url = prompt("กรุณาใส่ URL ของรูปภาพแผนผัง:");
-      if (url) {
-        document.getElementById('floorPlanImage').src = url;
+      const currentSrc = document.getElementById('floorPlanImage').src;
+      const url = prompt("กรุณากรอก URL ลิงก์รูปภาพแผนผัง (เช่น https://.../image.jpg หรือชื่อไฟล์ เช่น plan.jpg):", currentSrc.startsWith('data:') ? '' : currentSrc);
+      if (url && url.trim() !== "") {
+        const cleanUrl = url.trim();
+        document.getElementById('floorPlanImage').src = cleanUrl;
+        
+        if (typeof saveFloorPlanToCloud === 'function') {
+          saveFloorPlanToCloud(cleanUrl);
+        }
       }
     }
 
+    // เปิดโมดอลฟอร์ม
+    function openBookingModal() {
+      const iframe = document.getElementById('googleFormIframe');
+      formLoadCount = 0;
+      isModalOpening = true;
+      
+      // โหลดฟอร์มใหม่เสมอเพื่อให้พร้อมสำหรับการกรอกรอบใหม่
+      iframe.src = GOOGLE_FORM_URL;
+      
+      document.getElementById('bookingModal').classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+
+    // ปิดโมดอลฟอร์ม
+    function closeBookingModal() {
+      document.getElementById('bookingModal').classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+      isModalOpening = false;
+    }
+
+    // ฟังก์ชันตรวจจับเมื่อ iframe โหลดหน้าใหม่
+    // ครั้งที่ 1: หน้าแสดงฟอร์มเริ่มต้น
+    // ครั้งที่ 2: หน้าตอบรับหลังผู้ใช้กดปุ่มส่ง (Submit) ใน Google Form
+    function handleGoogleFormLoad() {
+      const modal = document.getElementById('bookingModal');
+      if (modal && !modal.classList.contains('hidden')) {
+        formLoadCount++;
+        
+        // เมื่อเกิดการโหลดครั้งที่ 2 แสดงว่าผู้ใช้กด Submit เรียบร้อยแล้ว
+        if (formLoadCount >= 2) {
+          setTimeout(() => {
+            closeBookingModal();
+            // รีเฟรช Google Calendar เพื่ออัปเดตข้อมูลตารางนัดหมายใหม่
+            const calendarIframe = document.getElementById('calendarIframe');
+            if (calendarIframe && calendarIframe.src) {
+              const currentSrc = calendarIframe.src;
+              calendarIframe.src = currentSrc;
+            }
+            // แสดงโมดอลสถานะแจ้งเตือนตรวจสอบอีเมล
+            document.getElementById('statusModal').classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+            formLoadCount = 0;
+          }, 450);
+        }
+      }
+    }
+
+    // ปิดโมดอลสถานะ
+    function closeStatusModal() {
+      document.getElementById('statusModal').classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    // เริ่มการทำงาน
     window.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
-      renderRooms();
+      selectRoom(0);
+
+      // ผูก Event Listener ตรวจจับการส่งฟอร์มอย่างปลอดภัยหลังจาก DOM และสคริปต์พร้อมใช้งาน
+      const formIframe = document.getElementById('googleFormIframe');
+      if (formIframe) {
+        formIframe.addEventListener('load', handleGoogleFormLoad);
+      }
     });
   </script>
 </body>
