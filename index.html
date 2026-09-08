@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -33,10 +34,19 @@
         </div>
       </div>
 
-      <button onclick="openBookingModal()" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-medium px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl shadow transition">
-        <i data-lucide="plus-circle" class="w-5 h-5"></i>
-        <span class="text-sm sm:text-base">จองห้องประชุม</span>
-      </button>
+      <div class="flex items-center gap-2">
+        <!-- ปุ่มยกเลิกการจอง -->
+        <button onclick="openCancelModal()" class="inline-flex items-center gap-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-medium px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl transition text-xs sm:text-sm">
+          <i data-lucide="calendar-x" class="w-4 h-4"></i>
+          <span>ยกเลิกการจอง</span>
+        </button>
+
+        <!-- ปุ่มจองห้องประชุม -->
+        <button onclick="openBookingModal()" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-medium px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl shadow transition text-xs sm:text-sm">
+          <i data-lucide="plus-circle" class="w-4 h-4"></i>
+          <span>จองห้องประชุม</span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -195,6 +205,61 @@
     </div>
   </div>
 
+  <!-- โมดอลยกเลิกการจองห้องประชุม -->
+  <div id="cancelModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 transition-all duration-300">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 sm:p-7 border border-slate-100 relative">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+        <div class="flex items-center gap-2.5 text-rose-600">
+          <div class="p-2 bg-rose-50 rounded-xl">
+            <i data-lucide="calendar-x" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-800 text-base">ยกเลิกการจองห้องประชุม</h3>
+            <p class="text-[11px] text-slate-500">ระบบจะค้นหาและลบรายการจองออกจากปฏิทินอัตโนมัติ</p>
+          </div>
+        </div>
+        <button onclick="closeCancelModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="cancelForm" onsubmit="handleCancelBooking(event)" class="space-y-3.5">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">เลือกห้องประชุมที่ต้องการยกเลิก *</label>
+          <select id="cancelRoomIndex" required class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl p-2.5 bg-slate-50 focus:bg-white focus:border-indigo-500 focus:outline-hidden">
+            <option value="0">ห้องประชุมกองทะเบียนธุรกิจ ชั้น 9</option>
+            <option value="1">ห้องประชุม ชั้น 4 (ห้องที่ 1)</option>
+            <option value="2">ห้องประชุม ชั้น 4 (ห้องที่ 2)</option>
+            <option value="3">ห้องประชุม ชั้น 4 (ห้องที่ 3)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">วันที่ที่เคยจองไว้ *</label>
+          <input type="date" id="cancelDate" required class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl p-2.5 bg-slate-50 focus:bg-white focus:border-indigo-500 focus:outline-hidden">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">อีเมลผู้ขอจอง (ที่กรอกในฟอร์ม) *</label>
+          <input type="email" id="cancelEmail" placeholder="example@mail.com" required class="w-full text-xs sm:text-sm border border-slate-300 rounded-xl p-2.5 bg-slate-50 focus:bg-white focus:border-indigo-500 focus:outline-hidden">
+          <p class="text-[11px] text-slate-500 mt-1">* เพื่อความปลอดภัย ต้องระบุอีเมลเดียวกันกับที่เคยกรอกจองไว้</p>
+        </div>
+
+        <div id="cancelMessage" class="hidden text-xs p-3 rounded-xl"></div>
+
+        <div class="pt-2 flex items-center justify-end gap-2">
+          <button type="button" onclick="closeCancelModal()" class="px-4 py-2 text-xs sm:text-sm text-slate-600 hover:bg-slate-100 rounded-xl transition">
+            ปิด
+          </button>
+          <button type="submit" id="cancelSubmitBtn" class="px-5 py-2 text-xs sm:text-sm bg-rose-600 hover:bg-rose-700 text-white font-medium rounded-xl shadow transition flex items-center gap-1.5">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+            <span>ยืนยันการยกเลิก</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- ท้ายหน้าเว็บ (Footer) -->
   <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500 mt-12">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
@@ -242,6 +307,10 @@
     ];
 
     const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScTC-YDy6xf6PeWdDwXXHTH7c4AboI53L7VmTfxIJFL-sDZ6g/viewform?usp=header";
+    
+    // ใส่ Web App URL จาก Google Apps Script (หากนำไป Deploy เป็น Web App)
+    const APPS_SCRIPT_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxPqtq-mXcDeu0OCqi-HBs-zDH4Ag60AVh5odAilvyfZbbKvI0CIXYY60N1x3XKc8X5/exec";
+
     let activeRoomIndex = 0;
     let formLoadCount = 0;
     let isModalOpening = false;
@@ -286,7 +355,22 @@
       renderRoomTabs();
     }
 
-    // อัปโหลดรูปภาพแผนผังห้องประชุมจากเครื่อง
+    // โหลดรูปภาพแผนผังที่บันทึกไว้ในเบราว์เซอร์ขึ้นมาแสดงอัตโนมัติ
+    function loadSavedFloorPlan() {
+      try {
+        const savedImage = localStorage.getItem('saved_meeting_floor_plan');
+        if (savedImage) {
+          const imgElement = document.getElementById('floorPlanImage');
+          if (imgElement) {
+            imgElement.src = savedImage;
+          }
+        }
+      } catch (err) {
+        console.warn("ไม่สามารถอ่านรูปภาพจาก localStorage ได้:", err);
+      }
+    }
+
+    // อัปโหลดรูปภาพแผนผังห้องประชุมจากเครื่อง (บันทึกถาวรลง localStorage)
     function handleFloorPlanUpload(event) {
       const file = event.target.files[0];
       if (file) {
@@ -295,16 +379,17 @@
           const newUrl = e.target.result;
           document.getElementById('floorPlanImage').src = newUrl;
           
-          // บันทึกลง Cloud หากมีระบบเชื่อมต่อ
-          if (typeof saveFloorPlanToCloud === 'function') {
-            saveFloorPlanToCloud(newUrl);
+          try {
+            localStorage.setItem('saved_meeting_floor_plan', newUrl);
+          } catch (err) {
+            console.warn("บันทึกลง localStorage ไม่สำเร็จ (ไฟล์รูปอาจมีขนาดใหญ่เกินไป):", err);
           }
         };
         reader.readAsDataURL(file);
       }
     }
 
-    // ใส่ URL แผนผังห้องประชุม
+    // ใส่ URL แผนผังห้องประชุม (บันทึกถาวรลง localStorage)
     function promptFloorPlanUrl() {
       const currentSrc = document.getElementById('floorPlanImage').src;
       const url = prompt("กรุณากรอก URL ลิงก์รูปภาพแผนผัง (เช่น https://.../image.jpg หรือชื่อไฟล์ เช่น plan.jpg):", currentSrc.startsWith('data:') ? '' : currentSrc);
@@ -312,8 +397,10 @@
         const cleanUrl = url.trim();
         document.getElementById('floorPlanImage').src = cleanUrl;
         
-        if (typeof saveFloorPlanToCloud === 'function') {
-          saveFloorPlanToCloud(cleanUrl);
+        try {
+          localStorage.setItem('saved_meeting_floor_plan', cleanUrl);
+        } catch (err) {
+          console.warn("บันทึกลง localStorage ไม่สำเร็จ:", err);
         }
       }
     }
@@ -371,9 +458,77 @@
       document.body.classList.remove('overflow-hidden');
     }
 
+    // เปิดโมดอลยกเลิกการจอง
+    function openCancelModal() {
+      document.getElementById('cancelModal').classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+      document.getElementById('cancelMessage').className = 'hidden';
+      // ตั้งค่าเริ่มต้นของวันที่เป็นวันปัจจุบัน
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('cancelDate').value = today;
+      document.getElementById('cancelRoomIndex').value = activeRoomIndex;
+    }
+
+    // ปิดโมดอลยกเลิกการจอง
+    function closeCancelModal() {
+      document.getElementById('cancelModal').classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    // ฟังก์ชันจัดการขอยกเลิกการจอง
+    async function handleCancelBooking(e) {
+      e.preventDefault();
+      const submitBtn = document.getElementById('cancelSubmitBtn');
+      const msgDiv = document.getElementById('cancelMessage');
+      const roomIndex = document.getElementById('cancelRoomIndex').value;
+      const date = document.getElementById('cancelDate').value;
+      const email = document.getElementById('cancelEmail').value.trim();
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `กำลังตรวจสอบ...`;
+
+      if (!APPS_SCRIPT_WEBAPP_URL) {
+        // หากยังไม่ได้นำ Apps Script ไปตั้งค่าเป็น Web App
+        msgDiv.className = 'text-xs p-3 rounded-xl bg-amber-50 text-amber-800 border border-amber-200 block';
+        msgDiv.innerHTML = `
+          <strong>💡 คำแนะนำ:</strong><br>
+          ท่านสามารถยกเลิกการจองได้โดยคลิกลิงก์ <strong>"ยกเลิกการจอง" ในอีเมลยืนยัน</strong> ที่ระบบส่งให้ตอนจอง 
+          หรือติดต่อผู้ดูแลเพื่อลบรายการได้โดยตรง
+        `;
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `ยืนยันการยกเลิก`;
+        return;
+      }
+
+      try {
+        const url = `${APPS_SCRIPT_WEBAPP_URL}?action=cancel&roomKey=${encodeURIComponent(rooms[roomIndex].name)}&date=${encodeURIComponent(date)}&email=${encodeURIComponent(email)}`;
+        const res = await fetch(url);
+        const result = await res.json();
+
+        if (result.success) {
+          msgDiv.className = 'text-xs p-3 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 block';
+          msgDiv.textContent = '✅ ' + result.message;
+          // รีเฟรชปฏิทิน
+          const calIframe = document.getElementById('calendarIframe');
+          if (calIframe && calIframe.src) calIframe.src = calIframe.src;
+          setTimeout(() => { closeCancelModal(); }, 2500);
+        } else {
+          msgDiv.className = 'text-xs p-3 rounded-xl bg-rose-50 text-rose-800 border border-rose-200 block';
+          msgDiv.textContent = '❌ ' + result.message;
+        }
+      } catch (err) {
+        msgDiv.className = 'text-xs p-3 rounded-xl bg-rose-50 text-rose-800 border border-rose-200 block';
+        msgDiv.textContent = 'เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `ยืนยันการยกเลิก`;
+      }
+    }
+
     // เริ่มการทำงาน
     window.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
+      loadSavedFloorPlan();
       selectRoom(0);
 
       // ผูก Event Listener ตรวจจับการส่งฟอร์มอย่างปลอดภัยหลังจาก DOM และสคริปต์พร้อมใช้งาน
